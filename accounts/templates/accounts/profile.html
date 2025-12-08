@@ -1,0 +1,23 @@
+{% extends "expenses/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+
+        <div class="card page-card mb-4">
+            <div class="card-body">
+                <h1 class="h4 page-title mb-3">My Profile</h1>
+
+                <p><strong>Username:</strong> {{ request.user.username }}</p>
+                <p><strong>Email:</strong> {{ request.user.email }}</p>
+                <p><strong>Full Name:</strong> {{ profile.full_name|default:"—" }}</p>
+                <p><strong>Phone Number:</strong> {{ profile.phone_number|default:"—" }}</p>
+
+                <a href="{% url 'profile_edit' %}" class="btn btn-primary mt-3">
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

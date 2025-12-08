@@ -1,0 +1,97 @@
+{% extends "expenses/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card page-card mb-4">
+            <div class="card-body">
+                <h1 class="h4 page-title mb-3">Balance Summary</h1>
+
+                <p class="text-muted">
+                    Positive balance means others owe this person money.
+                    Negative balance means they owe money to others.
+                </p>
+
+                {% if balance_list %}
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                        <tr>
+                            <th>Person</th>
+                            <th class="text-end">Net Balance (€)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in balance_list %}
+                            <tr>
+                                <td>
+                                    {% if item.person.owner_id == request.user.id and item.person.name == request.user.username %}
+                                        Me ({{ request.user.username }})
+                                    {% else %}
+                                        {{ item.person.name }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if item.balance > 0 %}
+                                        <span class="badge bg-success badge-pill">
+                                            +{{ item.balance }}
+                                        </span>
+                                    {% elif item.balance < 0 %}
+                                        <span class="badge bg-danger badge-pill">
+                                            {{ item.balance }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary badge-pill">
+                                            {{ item.balance }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="mb-0">
+                        No people or expenses yet. Start by
+                        <a href="{% url 'person_list' %}">adding friends</a>.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card page-card">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Who owes whom?</h2>
+
+                {% if settlements %}
+                    <ul class="list-group list-group-flush">
+                        {% for s in settlements %}
+                            <li class="list-group-item">
+                                {# labels for "Me" in this section too #}
+                                {% if s.from.owner_id == request.user.id and s.from.name == request.user.username %}
+                                    <strong>Me ({{ request.user.username }})</strong>
+                                {% else %}
+                                    <strong>{{ s.from.name }}</strong>
+                                {% endif %}
+                                owes
+                                {% if s.to.owner_id == request.user.id and s.to.name == request.user.username %}
+                                    <strong>Me ({{ request.user.username }})</strong>
+                                {% else %}
+                                    <strong>{{ s.to.name }}</strong>
+                                {% endif %}
+                                <span class="badge bg-primary ms-2">
+                                    €{{ s.amount }}
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="mb-0 text-muted">
+                        Everyone is settled up – no one owes anyone anything 🎉
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

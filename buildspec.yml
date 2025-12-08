@@ -1,0 +1,34 @@
+version: 0.2
+
+env:
+  variables:
+    DJANGO_SETTINGS_MODULE: cloud_expense_tracker.settings
+  # SONAR_TOKEN will be configured as an environment variable in CodeBuild console
+phases:
+  install:
+    commands:
+      - echo "Installing Python dependencies..."
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+      - pip install coverage
+  pre_build:
+    commands:
+      - echo "Running Django tests with coverage..."
+      - coverage run manage.py test
+      - coverage xml
+  build:
+    commands:
+      - echo "Downloading SonarScanner CLI..."
+      - export SONAR_SCANNER_VERSION=5.0.1.3006
+      - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip
+      - unzip sonar-scanner.zip
+      - export PATH="$PATH:$(pwd)/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin"
+      - echo "Running SonarCloud analysis..."
+      - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+  post_build:
+    commands:
+      - echo "Build completed on `date`"
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: no
