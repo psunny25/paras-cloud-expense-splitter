@@ -38,3 +38,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=psunny25_paras-cloud-expense-splitter
+            -Dsonar.organization=psunny25
+            -Dsonar.python.coverage.reportPaths=coverage.xml
