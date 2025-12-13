@@ -30,9 +30,12 @@ jobs:
           pip install coverage pylint pylint-django
 
       - name: Run Pylint
+        env:
+          DJANGO_SETTINGS_MODULE: cloud_expense_tracker.settings
+          PYTHONPATH: .
         run: |
-          # Lint only our apps, and focus on errors/warnings (R,C = refactor/convention)
           pylint cloud_expense_tracker accounts expenses --disable=R,C
+
 
       - name: Run tests with coverage
         run: |

@@ -16,6 +16,8 @@ disable =
     # Unused imports / args are sometimes needed in Django hooks & signals
     W0611,
     W0613
+    E5110,  # django-not-configured
+    E5142   # imported-auth-user
 
 [FORMAT]
 # Reasonable limit for our project
