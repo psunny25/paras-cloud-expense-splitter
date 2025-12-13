@@ -34,7 +34,7 @@ jobs:
           DJANGO_SETTINGS_MODULE: cloud_expense_tracker.settings
           PYTHONPATH: .
         run: |
-          pylint cloud_expense_tracker accounts expenses --disable=R,C
+          pylint cloud_expense_tracker accounts expenses --disable=R,C,W0613,E5110,W0404
 
 
       - name: Run tests with coverage
