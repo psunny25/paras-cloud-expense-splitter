@@ -5,21 +5,9 @@ from django.contrib.auth.models import User
 from .models import Profile
 
 
-# -----------------------------
-# SIGNUP FORM
-# -----------------------------
+
 class SignupForm(UserCreationForm):
-    """
-    Custom signup form that extends Django's built-in UserCreationForm.
-
-    Captures:
-    - username
-    - email
-    - password1
-    - password2
-
-    Email is validated to be unique.
-    """
+    
 
     email = forms.EmailField(
         required=True,
@@ -33,9 +21,7 @@ class SignupForm(UserCreationForm):
         fields = ("username", "email", "password1", "password2")
 
     def __init__(self, *args, **kwargs):
-        """
-        Add Bootstrap classes to all Django default fields.
-        """
+        
         super().__init__(*args, **kwargs)
 
         self.fields["username"].widget.attrs.update(
@@ -49,9 +35,7 @@ class SignupForm(UserCreationForm):
         )
 
     def clean_email(self):
-        """
-        Ensure the email is not already used by another user.
-        """
+        
         email = self.cleaned_data["email"].lower()
         if User.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError("An account with this email already exists.")
@@ -62,15 +46,7 @@ class SignupForm(UserCreationForm):
 # PROFILE EDIT FORM
 # -----------------------------
 class ProfileForm(forms.ModelForm):
-    """
-    Form that allows users to edit their profile details.
-
-    Fields:
-    - full_name
-    - phone_number
-
-    These are stored in the Profile model (OneToOne with User).
-    """
+    
 
     class Meta:
         model = Profile

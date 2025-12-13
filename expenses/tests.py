@@ -9,9 +9,7 @@ from .models import Person, Expense
 
 
 class ExpenseModelTests(TestCase):
-    """
-    Basic tests for the Expense model logic.
-    """
+    
 
     def setUp(self):
         # Create a user + two friends for test data
@@ -21,9 +19,7 @@ class ExpenseModelTests(TestCase):
         self.friend2 = Person.objects.create(owner=self.user, name="Friend 2")
 
     def test_split_amount_per_person(self):
-        """
-        split_amount_per_person should divide the amount equally between participants.
-        """
+        
         expense = Expense.objects.create(
             owner=self.user,
             description="Test expense",
@@ -38,9 +34,7 @@ class ExpenseModelTests(TestCase):
 
 
 class BalanceSummaryViewTests(TestCase):
-    """
-    Tests for the balance summary view logic.
-    """
+    
 
     def setUp(self):
         self.user = User.objects.create_user(username="tester", password="pass1234")
@@ -66,13 +60,7 @@ class BalanceSummaryViewTests(TestCase):
 
     def test_balance_summary_contains_expected_balances(self):
         
-        """
-        Me should be +5, friend should be -5.
-
-        Because a Person entry for the user may be created automatically
-        via signals in addition to the one we create in setUp, we sum
-        balances per name instead of assuming exactly one record.
-        """
+        
         self.client.login(username="tester", password="pass1234")
         url = reverse("balance_summary")
         response = self.client.get(url)

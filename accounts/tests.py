@@ -7,9 +7,7 @@ from .models import Profile
 
 
 class ProfileSignalTests(TestCase):
-    """
-    Ensure that a Profile is automatically created for each new User.
-    """
+    
 
     def test_profile_created_for_new_user(self):
         user = User.objects.create_user(username="tester", password="pass1234")
@@ -18,9 +16,7 @@ class ProfileSignalTests(TestCase):
 
 
 class SignupFormTests(TestCase):
-    """
-    Basic validation tests for the custom signup form.
-    """
+    
 
     def test_unique_email_validation(self):
         User.objects.create_user(

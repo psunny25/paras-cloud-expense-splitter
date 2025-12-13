@@ -4,9 +4,7 @@ from .models import Expense, Person
 
 
 class PersonForm(forms.ModelForm):
-    """
-    Form to create/update a Person (Friend) with Bootstrap styling.
-    """
+    
 
     class Meta:
         model = Person
@@ -22,12 +20,7 @@ class PersonForm(forms.ModelForm):
 
 
 class ExpenseForm(forms.ModelForm):
-    """
-    Form to create/update an Expense.
-
-    We inject the current user into the form so that:
-    - 'paid_by' and 'participants' only show that user's friends.
-    """
+    
 
     class Meta:
         model = Expense
@@ -48,9 +41,7 @@ class ExpenseForm(forms.ModelForm):
         }
 
     def __init__(self, *args, user=None, **kwargs):
-        """
-        Accept a 'user' kwarg so we can filter friend lists per user.
-        """
+        
         super().__init__(*args, **kwargs)
 
         if user is not None:

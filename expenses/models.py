@@ -6,12 +6,7 @@ from django.db import models
 
 
 class Person(models.Model):
-    """
-    Represents a friend/participant in shared expenses.
-
-    'owner' is the user who owns this friend entry.
-    Each logged-in user has their own friend list.
-    """
+    
 
     owner = models.ForeignKey(
         User,
@@ -32,23 +27,14 @@ class Person(models.Model):
     )
 
     def __str__(self):
-        """
-        Display a friendlier label when this Person represents the user themself.
-
-        We created a Person for each user with name = username.
-        For that record we show 'Me (username)' everywhere (forms, lists, etc.).
-        """
+        
         if self.owner and self.owner.username and self.name == self.owner.username:
             return f"Me ({self.owner.username})"
         return self.name
 
 
 class Expense(models.Model):
-    """
-    Single shared expense, similar to a Splitwise entry.
-
-    'owner' is the user who created/owns this expense.
-    """
+    
 
     owner = models.ForeignKey(
         User,
@@ -95,10 +81,7 @@ class Expense(models.Model):
         return f"{self.description} ({self.amount} paid by {self.paid_by})"
 
     def split_amount_per_person(self) -> Decimal:
-        """
-        Helper used in the balance summary to calculate the equal share
-        for each participant.
-        """
+        
         count = self.participants.count()
         if count == 0:
             return Decimal("0.00")
@@ -107,11 +90,7 @@ class Expense(models.Model):
 
 
 class RecentActivity(models.Model):
-    """
-    Simple activity log to show recent actions in the UI.
-
-    Each activity is text plus timestamp, scoped to the logged-in user.
-    """
+   
 
     owner = models.ForeignKey(
         User,

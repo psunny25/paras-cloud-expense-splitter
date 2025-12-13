@@ -9,16 +9,9 @@ from .forms import SignupForm, ProfileForm
 
 
 class CustomLoginView(LoginView):
-    """
-    Login view using Django's built-in authentication system.
-
-    We only customise:
-    - template name
-    - redirect field names (use default LOGIN_REDIRECT_URL from settings)
-    """
+    
     template_name = "accounts/login.html"
 
-    # Optional: add Bootstrap classes to the default AuthenticationForm
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields["username"].widget.attrs.update(
@@ -31,19 +24,12 @@ class CustomLoginView(LoginView):
 
 
 class CustomLogoutView(LogoutView):
-    """
-    Simple logout view – uses LOGOUT_REDIRECT_URL from settings.
-    """
+    
     next_page = reverse_lazy("login")
 
 
 def signup_view(request):
-    """
-    Handles user registration.
-
-    - GET: show empty signup form
-    - POST: validate input, create User, log them in, redirect to dashboard
-    """
+    
     if request.method == "POST":
         form = SignupForm(request.POST)
         if form.is_valid():
@@ -59,18 +45,14 @@ def signup_view(request):
 
 @login_required
 def profile_view(request):
-    """
-    Display the user's profile.
-    """
+    
     profile = request.user.profile
     return render(request, "accounts/profile.html", {"profile": profile})
    
 
 @login_required
 def profile_edit_view(request):
-    """
-    Edit the user's profile fields.
-    """
+    
     profile = request.user.profile
 
     if request.method == "POST":

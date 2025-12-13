@@ -16,18 +16,14 @@ from .models import Expense, Person, RecentActivity
 
 
 def log_activity(user, message: str) -> None:
-    """
-    Helper to record a RecentActivity entry for the given user.
-    """
+    
     RecentActivity.objects.create(owner=user, message=message)
 
 
-# ----------------- Friend (Person) CRUD views ----------------- #
+
 
 class PersonListView(LoginRequiredMixin, ListView):
-    """
-    Show all friends for the logged-in user, with a simple search box.
-    """
+    
     model = Person
     template_name = "expenses/person_list.html"
     context_object_name = "people"
@@ -47,9 +43,7 @@ class PersonListView(LoginRequiredMixin, ListView):
 
 
 class PersonCreateView(LoginRequiredMixin, CreateView):
-    """
-    Create a new friend for the logged-in user.
-    """
+    
     model = Person
     form_class = PersonForm
     template_name = "expenses/person_form.html"
@@ -63,9 +57,7 @@ class PersonCreateView(LoginRequiredMixin, CreateView):
 
 
 class PersonUpdateView(LoginRequiredMixin, UpdateView):
-    """
-    Edit an existing friend belonging to the logged-in user.
-    """
+    
     model = Person
     form_class = PersonForm
     template_name = "expenses/person_form.html"
@@ -81,9 +73,7 @@ class PersonUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class PersonDeleteView(LoginRequiredMixin, DeleteView):
-    """
-    Delete a friend belonging to the logged-in user.
-    """
+    
     model = Person
     template_name = "expenses/person_confirm_delete.html"
     success_url = reverse_lazy("person_list")
@@ -99,12 +89,10 @@ class PersonDeleteView(LoginRequiredMixin, DeleteView):
         return response
 
 
-# ----------------- Expense CRUD views ----------------- #
+
 
 class ExpenseListView(LoginRequiredMixin, ListView):
-    """
-    Shows all expenses for the logged-in user.
-    """
+    
     model = Expense
     template_name = "expenses/expense_list.html"
     context_object_name = "expenses"
@@ -119,9 +107,7 @@ class ExpenseListView(LoginRequiredMixin, ListView):
 
 
 class ExpenseCreateView(LoginRequiredMixin, CreateView):
-    """
-    Create a new expense owned by the logged-in user.
-    """
+    
     model = Expense
     form_class = ExpenseForm
     template_name = "expenses/expense_form.html"
@@ -144,9 +130,7 @@ class ExpenseCreateView(LoginRequiredMixin, CreateView):
 
 
 class ExpenseUpdateView(LoginRequiredMixin, UpdateView):
-    """
-    Edit an existing expense belonging to the logged-in user.
-    """
+    
     model = Expense
     form_class = ExpenseForm
     template_name = "expenses/expense_form.html"
@@ -170,9 +154,7 @@ class ExpenseUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class ExpenseDeleteView(LoginRequiredMixin, DeleteView):
-    """
-    Delete an expense belonging to the logged-in user.
-    """
+    
     model = Expense
     template_name = "expenses/expense_confirm_delete.html"
     success_url = reverse_lazy("expense_list")
@@ -188,18 +170,12 @@ class ExpenseDeleteView(LoginRequiredMixin, DeleteView):
         return response
 
 
-# ----------------- Balance summary ----------------- #
+
 
 
 @login_required
 def balance_summary(request):
-    """
-    Calculates net balance for each friend of the logged-in user and
-    derives a simple list of 'who owes whom' settlements.
-
-    Positive balance  -> others owe this person money (creditor)
-    Negative balance  -> this person owes money to others (debtor)
-    """
+    
     people = Person.objects.filter(owner=request.user)
     balances = {person.id: Decimal("0.00") for person in people}
 
@@ -208,7 +184,7 @@ def balance_summary(request):
         .prefetch_related("participants", "paid_by")
     )
 
-    # Build per-person balances
+    # Build per person balances
     for expense in expenses:
         share = expense.split_amount_per_person()
         balances[expense.paid_by_id] += expense.amount
@@ -221,17 +197,17 @@ def balance_summary(request):
         bal = balances[person.id].quantize(Decimal("0.01"))
         balance_list.append({"person": person, "balance": bal})
 
-    # Sort so biggest creditor at the top
+    # Sort biggest creditor at the top
     balance_list.sort(key=lambda item: item["balance"], reverse=True)
 
-    # ---------- Compute "who owes whom" settlements ----------
+
     creditors = []  # (person, amount > 0)
     debtors = []    # (person, amount > 0, representing how much they owe)
 
     for person in people:
         bal = balances[person.id].quantize(Decimal("0.01"))
         if bal > 0:
-            creditors.append([person, bal])   # mutable list so we can adjust
+            creditors.append([person, bal])   # mutable list
         elif bal < 0:
             debtors.append([person, -bal])    # store positive amount owed
 
@@ -276,12 +252,10 @@ def balance_summary(request):
 
 
 
-# ----------------- Recent Activity list ----------------- #
+
 
 class RecentActivityListView(LoginRequiredMixin, ListView):
-    """
-    Show recent actions performed by the logged-in user.
-    """
+    
     model = RecentActivity
     template_name = "expenses/activity_list.html"
     context_object_name = "activities"

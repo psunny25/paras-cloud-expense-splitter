@@ -1,28 +1,28 @@
 [MASTER]
-# Tell pylint we are using Django, so it understands ORM attributes better
+
 load-plugins = pylint_django
 
 # Files / folders to ignore
 ignore = migrations, venv
 
 [MESSAGES CONTROL]
-# We disable refactor + convention messages (R, C) in CI to focus on
+# disable refactor + convention messages (R, C) in CI to focus on
 # real problems. Also disable a few Django-specific false positives.
 disable =
     C,
     R,
     # Django ORM: "Model has no 'objects' member" etc.
     E1101,
-    # Unused imports / args are sometimes needed in Django hooks & signals
+    # Unused imports / args
     W0611,
     W0613,
     E5110,  # django-not-configured
     E5142   # imported-auth-user
 
 [FORMAT]
-# Reasonable limit for our project
+
 max-line-length = 100
 
 [REPORTS]
-# We don't need the full text reports in CI, just the messages
+
 reports = no

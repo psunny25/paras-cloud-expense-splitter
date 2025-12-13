@@ -6,11 +6,7 @@ from django.apps import apps
 
 
 class Profile(models.Model):
-    """
-    Stores additional information for each user.
-
-    Extends Django's built-in User model using a one-to-one relationship.
-    """
+    
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -34,9 +30,7 @@ class Profile(models.Model):
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, **kwargs):
-    """
-    Ensure every User has an associated Profile.
-    """
+    
     # get_or_create is safe here because Profile has a one-to-one field to User
     # and we never query by non-unique fields.
     Profile.objects.get_or_create(user=instance)
@@ -46,13 +40,7 @@ def create_or_update_user_profile(sender, instance, **kwargs):
 
 @receiver(post_save, sender=User)
 def ensure_person_for_user(sender, instance, **kwargs):
-    """
-    Ensure there is at least one Person entry in the expenses app
-    representing this user. If one already exists, do nothing.
-
-    This lets the logged-in user appear in 'Paid by' and 'Participants'
-    lists as 'Me (username)'.
-    """
+    
     Person = apps.get_model("expenses", "Person")
 
     # Check if any Person already matches (owner=user, name=username)
